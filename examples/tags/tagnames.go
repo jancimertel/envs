@@ -19,7 +19,7 @@ func main() {
 	os.Setenv("TAG3", "123")
 	os.Setenv("TAG4", "0.2")
 
-	bundle := EnvsBundle{}
+	bundle := EnvsTagBundle{}
 	if err := envs.MustHave(&bundle); err == nil {
 		fmt.Println(fmt.Sprintf("%v, %v, %v, %v", bundle.VAR1, bundle.VAR2, bundle.VAR3, bundle.VAR4))
 	}
