@@ -52,7 +52,7 @@ func TestParseBool(t *testing.T) {
 
 func TestMustHaveBool(t *testing.T) {
 	type test struct {
-		BoolTrue bool
+		BoolTrue  bool
 		BoolFalse bool
 	}
 	_ = os.Setenv("BoolTrue", "1")
@@ -79,8 +79,8 @@ func TestMustHaveString(t *testing.T) {
 func TestMustHaveInt(t *testing.T) {
 	wantedNumber := 9
 	type test struct {
-		Int int
-		Int8 int8
+		Int   int
+		Int8  int8
 		Int16 int16
 		Int32 int32
 		Int64 int64
@@ -103,8 +103,8 @@ func TestMustHaveInt(t *testing.T) {
 func TestMustHaveUint(t *testing.T) {
 	wantedNumber := uint(9)
 	type test struct {
-		Uint uint
-		Uint8 uint8
+		Uint   uint
+		Uint8  uint8
 		Uint16 uint16
 		Uint32 uint32
 		Uint64 uint64
@@ -145,4 +145,16 @@ func TestMustHaveStruct(t *testing.T) {
 
 	inst := test{}
 	assert.Error(t, MustHave(inst))
+}
+
+func TestTags(t *testing.T) {
+	os.Setenv("TEST_BOOL", "1")
+	type test struct {
+		FieldName string `envs:"GOPATH"`
+		BoolVal   bool   `envs:"TEST_BOOL"`
+	}
+
+	inst := &test{}
+	assert.NoError(t, MustHave(inst))
+	assert.Equal(t, inst.BoolVal, true)
 }

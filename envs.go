@@ -9,6 +9,8 @@ import (
 	"strings"
 )
 
+const TagName = "envs"
+
 func MustHave(schema interface{}) error {
 	val := reflect.ValueOf(schema)
 
@@ -21,8 +23,15 @@ func MustHave(schema interface{}) error {
 	schemaType := val.Type()
 	for i := 0; i < val.NumField(); i++ {
 		schemaField := schemaType.Field(i)
+		tagValue := schemaField.Tag.Get(TagName)
 		fieldName := schemaField.Name
-		if passedVal := os.Getenv(fieldName); passedVal == "" {
+
+		envName := tagValue
+		if envName == "" {
+			envName = fieldName
+		}
+
+		if passedVal := os.Getenv(envName); passedVal == "" {
 			return errors.New(fmt.Sprintf("field %s: empty", fieldName))
 		} else {
 			elemField := val.Field(i)
